@@ -24,9 +24,14 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Homepage'),
+    return Scaffold(
+      body: SafeArea(
+        child: Column(
+          children: const <Widget>[
+            TextField(),
+            Text('Homepage'),
+          ],
+        ),
       ),
     );
   }
