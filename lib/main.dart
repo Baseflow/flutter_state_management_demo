@@ -19,22 +19,23 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   MyHomePage({super.key});
 
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   final List<String> _todoItems = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Expanded(
-          child: ListView.builder(
-            itemCount: _todoItems.length,
-            itemBuilder: (BuildContext context, int index) => ListTile(
-              title: Text(_todoItems[index]),
-            ),
-          ),
+      body: ListView.builder(
+        itemCount: _todoItems.length,
+        itemBuilder: (BuildContext context, int index) => ListTile(
+          title: Text('${index + 1}. ${_todoItems[index]}'),
         ),
       ),
       floatingActionButton: FloatingActionButton(onPressed: _addTodoItem),
@@ -42,6 +43,8 @@ class MyHomePage extends StatelessWidget {
   }
 
   void _addTodoItem() {
-    _todoItems.add('Placeholder');
+    setState(() {
+      _todoItems.add('Placeholder');
+    });
   }
 }
