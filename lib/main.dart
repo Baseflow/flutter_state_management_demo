@@ -38,7 +38,10 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text('${index + 1}. ${_todoItems[index]}'),
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: _addTodoItem),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addTodoItem,
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
