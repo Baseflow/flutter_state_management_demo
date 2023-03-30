@@ -32,22 +32,36 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-        itemCount: _todoItems.length,
-        itemBuilder: (BuildContext context, int index) => ListTile(
-          title: Text('${index + 1}. ${_todoItems[index]}'),
-        ),
+      appBar: AppBar(
+        title: const Text('Todo List'),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _addTodoItem,
-        child: const Icon(Icons.add),
+      body: Column(
+        children: [
+          TextField(
+            textInputAction: TextInputAction.done,
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
+              ),
+              hintText: 'Enter a todo item',
+            ),
+            onSubmitted: (value) {
+              setState(() {
+                _todoItems.add(value);
+              });
+            },
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _todoItems.length,
+              itemBuilder: (BuildContext context, int index) => ListTile(
+                title: Text('${index + 1}. ${_todoItems[index]}'),
+              ),
+            ),
+          ),
+        ],
       ),
     );
-  }
-
-  void _addTodoItem() {
-    setState(() {
-      _todoItems.add('Placeholder');
-    });
   }
 }
