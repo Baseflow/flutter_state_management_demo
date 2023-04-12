@@ -28,6 +28,8 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<String> _todoItems = [];
+  final _textEditingController = TextEditingController();
+  final _focusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,8 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           TextField(
             textInputAction: TextInputAction.done,
+            controller: _textEditingController,
+            focusNode: _focusNode,
             decoration: const InputDecoration(
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 16,
@@ -49,6 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
             onSubmitted: (value) {
               setState(() {
                 _todoItems.add(value);
+                _textEditingController.clear();
+                _focusNode.requestFocus();
               });
             },
           ),
