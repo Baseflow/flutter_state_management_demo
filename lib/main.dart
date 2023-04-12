@@ -63,6 +63,14 @@ class _MyHomePageState extends State<MyHomePage> {
               itemCount: _todoItems.length,
               itemBuilder: (BuildContext context, int index) => ListTile(
                 title: Text('${index + 1}. ${_todoItems[index]}'),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () {
+                    setState(() {
+                      _todoItems.removeAt(index);
+                    });
+                  },
+                ),
               ),
             ),
           ),
