@@ -1,9 +1,19 @@
-class ToDoItem {
-  ToDoItem({
+class TodoItem {
+  const TodoItem({
     required this.title,
     this.isDone = false,
   });
 
-  String title;
-  bool isDone;
+  final String title;
+  final bool isDone;
+
+  TodoItem copyWith({
+    String? title,
+    bool? isDone,
+  }) {
+    return TodoItem(
+      title: title ?? this.title,
+      isDone: isDone ?? this.isDone,
+    );
+  }
 }

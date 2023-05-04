@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_state_management_demo/closed_items_view.dart';
 import 'package:flutter_state_management_demo/open_items_view.dart';
-import 'package:flutter_state_management_demo/to_do_item.dart';
+import 'package:flutter_state_management_demo/todo_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,11 +31,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<ToDoItem> _todoItems = [];
-
   @override
   Widget build(BuildContext context) {
-    final openItems = _todoItems.where((todo) => !todo.isDone).toList();
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -46,23 +44,36 @@ class _MyHomePageState extends State<MyHomePage> {
                 Tab(text: 'Done'),
               ],
             )),
-        body: TabBarView(
-          children: [
-            OpenItemsView(
-              openItems: _todoItems
-                  .where(
-                    (element) => !element.isDone,
-                  )
-                  .toList(),
+        body: BlocProvider(
+          create: (context) => TodoCubit(),
+          child: BlocListener<TodoCubit, TodoState>(
+            listenWhen: (previous, current) {
+              return current.todoItems.length < previous.todoItems.length;
+            },
+            listener: (context, state) {
+              _showUndoSnackbar(context);
+            },
+            child: const TabBarView(
+              children: [
+                OpenItemsView(),
+                ClosedItemsView(),
+              ],
             ),
-            ClosedItemsView(
-              closedItems: _todoItems
-                  .where(
-                    (element) => element.isDone,
-                  )
-                  .toList(),
-            ),
-          ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showUndoSnackbar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Todo item removed'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            context.read<TodoCubit>().undoRemoveItem();
+          },
         ),
       ),
     );

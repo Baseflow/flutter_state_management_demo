@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_state_management_demo/to_do_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_state_management_demo/todo_cubit.dart';
 
 class OpenItemsView extends StatefulWidget {
-  const OpenItemsView({
-    required List<ToDoItem> openItems,
-    super.key,
-  }) : _openItems = openItems;
-
-  final List<ToDoItem> _openItems;
+  const OpenItemsView({super.key});
 
   @override
   _OpenItemsViewState createState() => _OpenItemsViewState();
@@ -16,6 +12,13 @@ class OpenItemsView extends StatefulWidget {
 class _OpenItemsViewState extends State<OpenItemsView> {
   final _textEditingController = TextEditingController();
   final _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,37 +36,36 @@ class _OpenItemsViewState extends State<OpenItemsView> {
             hintText: 'Enter a todo item',
           ),
           onSubmitted: (value) {
-            setState(() {
-              widget._openItems.add(ToDoItem(title: value));
-              _textEditingController.clear();
-              _focusNode.requestFocus();
-            });
+            context.read<TodoCubit>().addItem(value);
+            _textEditingController.clear();
+            _focusNode.requestFocus();
           },
         ),
         Expanded(
-          child: ListView.builder(
-            itemCount: widget._openItems.length,
-            itemBuilder: (BuildContext context, int index) {
-              final todo = widget._openItems[index];
-              return ListTile(
-                title: Text('${index + 1}. ${todo.title}'),
-                leading: Checkbox(
-                  value: todo.isDone,
-                  onChanged: (value) {
-                    setState(() {
-                      todo.isDone = value ?? false;
-                      widget._openItems.remove(todo);
-                    });
-                  },
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    setState(() {
-                      widget._openItems.removeAt(index);
-                    });
-                  },
-                ),
+          child: BlocBuilder<TodoCubit, TodoState>(
+            builder: (context, state) {
+              final openItems =
+                  state.todoItems.where((element) => !element.isDone).toList();
+              return ListView.builder(
+                itemCount: openItems.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final todo = openItems[index];
+                  return ListTile(
+                    title: Text('${index + 1}. ${todo.title}'),
+                    leading: Checkbox(
+                      value: todo.isDone,
+                      onChanged: (_) {
+                        context.read<TodoCubit>().onItemChecked(todo);
+                      },
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        context.read<TodoCubit>().removeItem(todo);
+                      },
+                    ),
+                  );
+                },
               );
             },
           ),
