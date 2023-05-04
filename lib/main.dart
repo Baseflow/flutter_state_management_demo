@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_state_management_demo/closed_items_view.dart';
+import 'package:flutter_state_management_demo/open_items_view.dart';
+import 'package:flutter_state_management_demo/to_do_item.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,54 +30,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<String> _todoItems = [];
-  final _textEditingController = TextEditingController();
-  final _focusNode = FocusNode();
+  List<ToDoItem> _todoItems = [];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Todo List'),
-      ),
-      body: Column(
-        children: [
-          TextField(
-            textInputAction: TextInputAction.done,
-            controller: _textEditingController,
-            focusNode: _focusNode,
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 8,
-              ),
-              hintText: 'Enter a todo item',
+    final openItems = _todoItems.where((todo) => !todo.isDone).toList();
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+            title: const Text('Todo List'),
+            bottom: const TabBar(
+              tabs: [
+                Tab(text: 'Open'),
+                Tab(text: 'Done'),
+              ],
+            )),
+        body: TabBarView(
+          children: [
+            OpenItemsView(
+              openItems: _todoItems
+                  .where(
+                    (element) => !element.isDone,
+                  )
+                  .toList(),
             ),
-            onSubmitted: (value) {
-              setState(() {
-                _todoItems.add(value);
-                _textEditingController.clear();
-                _focusNode.requestFocus();
-              });
-            },
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _todoItems.length,
-              itemBuilder: (BuildContext context, int index) => ListTile(
-                title: Text('${index + 1}. ${_todoItems[index]}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () {
-                    setState(() {
-                      _todoItems.removeAt(index);
-                    });
-                  },
-                ),
-              ),
+            ClosedItemsView(
+              closedItems: _todoItems
+                  .where(
+                    (element) => element.isDone,
+                  )
+                  .toList(),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
