@@ -21,7 +21,7 @@ class ClosedItemsView extends StatelessWidget {
               leading: Checkbox(
                 value: todo.isDone,
                 onChanged: (value) {
-                  context.read<TodoCubit>().onItemChecked(todo);
+                  context.read<TodoCubit>().toggleItem(todo);
                 },
               ),
               trailing: IconButton(

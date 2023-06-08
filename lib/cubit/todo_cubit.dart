@@ -15,7 +15,7 @@ class TodoCubit extends Cubit<TodoState> {
     ));
   }
 
-  void onItemChecked(TodoItem todo) {
+  void toggleItem(TodoItem todo) {
     final index = state.todoItems.indexOf(todo);
     final updatedTodo = todo.copyWith(isDone: !todo.isDone);
     final updatedList = List<TodoItem>.from(state.todoItems);

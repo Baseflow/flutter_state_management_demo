@@ -55,7 +55,7 @@ class _OpenItemsViewState extends State<OpenItemsView> {
                     leading: Checkbox(
                       value: todo.isDone,
                       onChanged: (_) {
-                        context.read<TodoCubit>().onItemChecked(todo);
+                        context.read<TodoCubit>().toggleItem(todo);
                       },
                     ),
                     trailing: IconButton(
