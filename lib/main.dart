@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_state_management_demo/closed_items_view.dart';
+import 'package:flutter_state_management_demo/cubit/todo_cubit.dart';
 import 'package:flutter_state_management_demo/open_items_view.dart';
-import 'package:flutter_state_management_demo/todo_cubit.dart';
 
 void main() {
   runApp(const MyApp());
