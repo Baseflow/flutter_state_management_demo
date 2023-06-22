@@ -71,9 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
         content: const Text('Todo item removed'),
         action: SnackBarAction(
           label: 'Undo',
-          onPressed: () {
-            context.read<TodoCubit>().undoRemoveItem();
-          },
+          onPressed: context.read<TodoCubit>().undoRemovedItem,
         ),
       ),
     );

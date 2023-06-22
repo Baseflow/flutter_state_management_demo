@@ -10,8 +10,8 @@ class ClosedItemsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocSelector<TodoCubit, TodoState, List<TodoItem>>(
       selector: (state) => state.todoItems,
-      builder: (context, state) {
-        final closedItems = state.where((todo) => todo.isDone).toList();
+      builder: (context, todoItems) {
+        final closedItems = todoItems.where((todo) => todo.isDone).toList();
         return ListView.builder(
           itemCount: closedItems.length,
           itemBuilder: (BuildContext context, int index) {
