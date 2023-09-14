@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key})
-      : _todoItems = [
-          'Item 1',
-          'Item 2',
-          'Item 3',
-        ];
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-  final List<String> _todoItems;
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final List<String> _todoItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,9 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _todoItems.add('Item ${_todoItems.length + 1}');
+          setState(() {
+            _todoItems.add('Item ${_todoItems.length + 1}');
+          });
         },
         tooltip: 'Add Todo',
         child: const Icon(Icons.add),
