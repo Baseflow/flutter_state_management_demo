@@ -15,11 +15,11 @@ class ClosedItemsView extends StatefulWidget {
 
 class _ClosedItemsViewState extends State<ClosedItemsView> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     final closedItems = widget.todoItems.where((todo) => todo.isDone).toList();
     return ListView.builder(
       itemCount: closedItems.length,
-      itemBuilder: (BuildContext context, int index) {
+      itemBuilder: (context, index) {
         final todo = widget.todoItems[index];
         if (!todo.isDone) {
           return const SizedBox.shrink();

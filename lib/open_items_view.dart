@@ -25,7 +25,7 @@ class _OpenItemsViewState extends State<OpenItemsView> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     final openTodoItems =
         widget.todoItems.where((todo) => !todo.isDone).toList();
     return Column(
@@ -52,7 +52,7 @@ class _OpenItemsViewState extends State<OpenItemsView> {
         Expanded(
           child: ListView.builder(
             itemCount: openTodoItems.length,
-            itemBuilder: (BuildContext context, int index) {
+            itemBuilder: (context, index) {
               final todo = widget.todoItems[index];
               if (todo.isDone) {
                 return const SizedBox.shrink();
