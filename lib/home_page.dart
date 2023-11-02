@@ -24,13 +24,42 @@ class HomePage extends StatelessWidget {
             ),
           ),
           body: const SafeArea(
-            child: TabBarView(
-              children: [
-                OpenItemsView(),
-                ClosedItemsView(),
-              ],
-            ),
+            child: _TodoTabBarView(),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TodoTabBarView extends StatelessWidget {
+  const _TodoTabBarView();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<TodoCubit, TodoState>(
+      listenWhen: (previous, current) {
+        return current.todoItems.length < previous.todoItems.length;
+      },
+      listener: (context, state) {
+        _showUndoSnackbar(context);
+      },
+      child: const TabBarView(
+        children: [
+          OpenItemsView(),
+          ClosedItemsView(),
+        ],
+      ),
+    );
+  }
+
+  void _showUndoSnackbar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Todo item removed'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: context.read<TodoCubit>().undoRemovedItem,
         ),
       ),
     );

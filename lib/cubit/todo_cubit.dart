@@ -17,7 +17,10 @@ class TodoCubit extends Cubit<TodoState> {
   /// Removes a [TodoItem] from the list.
   void removeTodoItem(TodoItem todoItem) {
     final todoItems = [...state.todoItems]..remove(todoItem);
-    emit(state.copyWith(todoItems: todoItems));
+    emit(state.copyWith(
+      todoItems: todoItems,
+      lastRemovedItem: todoItem,
+    ));
   }
 
   /// Toggles the `isDone` property of a [TodoItem].
@@ -26,5 +29,16 @@ class TodoCubit extends Cubit<TodoState> {
     final index = todoItems.indexOf(todoItem);
     todoItems[index] = todoItem.copyWith(isDone: !todoItem.isDone);
     emit(state.copyWith(todoItems: todoItems));
+  }
+
+  /// Undoes the last removed item `todo` property.
+  void undoRemovedItem() {
+    final updatedList = List<TodoItem>.from(state.todoItems);
+    updatedList.add(state.lastRemovedItem!);
+
+    emit(state.copyWith(
+      todoItems: updatedList,
+      lastRemovedItem: null,
+    ));
   }
 }
