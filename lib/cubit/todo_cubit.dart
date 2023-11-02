@@ -15,11 +15,14 @@ class TodoCubit extends Cubit<TodoState> {
   }
 
   /// Removes a [TodoItem] from the list.
-  void removeTodoItem(TodoItem todoItem) {
+  Future<void> removeTodoItem(TodoItem todoItem) async {
+    emit(state.copyWith(isLoading: true));
+    await Future.delayed(const Duration(seconds: 2));
     final todoItems = [...state.todoItems]..remove(todoItem);
     emit(state.copyWith(
       todoItems: todoItems,
       lastRemovedItem: todoItem,
+      isLoading: false,
     ));
   }
 

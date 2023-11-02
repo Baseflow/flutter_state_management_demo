@@ -21,12 +21,14 @@ class ClosedItemsView extends StatelessWidget {
                   context.read<TodoCubit>().toggleTodoItem(todo);
                 },
               ),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: () {
-                  context.read<TodoCubit>().removeTodoItem(todo);
-                },
-              ),
+              trailing: state.isLoading
+                  ? const CircularProgressIndicator()
+                  : IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        context.read<TodoCubit>().removeTodoItem(todo);
+                      },
+                    ),
             );
           },
         );

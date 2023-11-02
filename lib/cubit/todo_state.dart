@@ -4,8 +4,12 @@ part of 'todo_cubit.dart';
 class TodoState extends Equatable {
   const TodoState({
     this.lastRemovedItem,
+    this.isLoading = false,
     this.todoItems = const [],
   });
+
+  /// Whether something is loading.
+  final bool isLoading;
 
   /// The list of [TodoItem]s.
   final List<TodoItem> todoItems;
@@ -20,17 +24,19 @@ class TodoState extends Equatable {
       todoItems.where((todo) => todo.isDone).toList();
 
   @override
-  List<Object?> get props => [todoItems, lastRemovedItem];
+  List<Object?> get props => [todoItems, lastRemovedItem, isLoading];
 
   /// Returns a copy of the current [TodoState] with the provided values
   /// overridden.
   TodoState copyWith({
     List<TodoItem>? todoItems,
     TodoItem? lastRemovedItem,
+    bool? isLoading,
   }) {
     return TodoState(
       todoItems: todoItems ?? this.todoItems,
       lastRemovedItem: lastRemovedItem ?? this.lastRemovedItem,
+      isLoading: isLoading ?? this.isLoading,
     );
   }
 }
