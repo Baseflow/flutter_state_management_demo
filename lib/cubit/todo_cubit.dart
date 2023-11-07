@@ -39,7 +39,7 @@ class TodoCubit extends Cubit<TodoState> {
     final updatedList = List<TodoItem>.from(state.todoItems);
     updatedList.add(state.lastRemovedItem!);
 
-    emit(state.copyWith(
+    emit(TodoState(
       todoItems: updatedList,
       lastRemovedItem: null,
     ));
