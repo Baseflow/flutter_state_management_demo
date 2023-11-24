@@ -1,6 +1,7 @@
 part of 'todo_cubit.dart';
 
 /// The state of the list the list of [TodoItem]s.
+@immutable
 class TodoState extends Equatable {
   const TodoState({
     this.lastRemovedItem,
