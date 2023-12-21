@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_state_management_demo/todo_item.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({super.key})
-      : _controller = TextEditingController(),
-        _todoItems = const [];
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-  final List<TodoItem> _todoItems;
-  final TextEditingController _controller;
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final List<TodoItem> _todoItems = [];
+  final TextEditingController _controller = TextEditingController();
+  final _focusNode = FocusNode();
+
+  TodoItem? _lastRemovedItem;
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +31,18 @@ class HomePage extends StatelessWidget {
       body: Column(
         children: [
           TextField(
+            focusNode: _focusNode,
             controller: _controller,
             decoration: const InputDecoration(
               hintText: 'Enter a new todo item',
               contentPadding: EdgeInsets.all(16),
             ),
             onSubmitted: (value) {
-              // TODO: Add the value to the list of items;
+              setState(() {
+                _todoItems.add(TodoItem(title: value));
+              });
               _controller.clear();
+              _focusNode.requestFocus();
             },
           ),
           Expanded(
@@ -35,6 +52,8 @@ class HomePage extends StatelessWidget {
                 final todo = _todoItems[index];
                 return ListTile(
                   title: Text(todo.title),
+                  // TODO: Add something here to delete the item.
+                  // TODO(bonus): Add something here to undo the deleted item.
                 );
               },
             ),
