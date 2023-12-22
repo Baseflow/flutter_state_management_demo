@@ -1,63 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_state_management_demo/models/todo_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_state_management_demo/cubit/todo_cubit.dart';
 import 'package:flutter_state_management_demo/views/todo_item_list_tile.dart';
 
-class OpenTodoItemsTabView extends StatefulWidget {
-  const OpenTodoItemsTabView(
-    this._todoItems, {
-    super.key,
-  });
-
-  final List<TodoItem> _todoItems;
-
-  @override
-  State<OpenTodoItemsTabView> createState() => _OpenTodoItemsTabViewState();
-}
-
-class _OpenTodoItemsTabViewState extends State<OpenTodoItemsTabView> {
-  final TextEditingController _controller = TextEditingController();
-  final _focusNode = FocusNode();
-
-  TodoItem? _lastDeletedItem;
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
+class OpenTodoItemsTabView extends StatelessWidget {
+  const OpenTodoItemsTabView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        TextField(
-          focusNode: _focusNode,
-          controller: _controller,
-          decoration: const InputDecoration(
-            hintText: 'Enter a new todo item',
-            contentPadding: EdgeInsets.all(16),
-          ),
-          onSubmitted: (value) {
-            setState(() {
-              widget._todoItems.add(TodoItem(title: value));
-            });
-            _controller.clear();
-            _focusNode.requestFocus();
-          },
-        ),
+        const _AddTodoTextField(),
         Expanded(
-          // TODO: How are we only showing open todo items?
-          child: ListView.builder(
-            itemCount: widget._todoItems.length,
-            itemBuilder: (BuildContext context, int index) {
-              final todo = widget._todoItems[index];
-              return TodoItemListTile(
-                todo,
-                onRemove: () => _removeTodoItem(todo),
-                onUndo: _undoLastRemoved,
-                onChanged: () {
-                  // TODO: implement toggling todo item.
+          child: BlocBuilder<TodoCubit, TodoState>(
+            builder: (context, state) {
+              return ListView.builder(
+                itemCount: state.openTodoItems.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final todo = state.openTodoItems[index];
+                  return TodoItemListTile(
+                    todo,
+                    onRemove: () {
+                      context.read<TodoCubit>().removeTodoItem(todo);
+                    },
+                    onUndo: context.read<TodoCubit>().undoLastRemoved,
+                    onChanged: () {
+                      context.read<TodoCubit>().toggleTodoItem(todo);
+                    },
+                  );
                 },
               );
             },
@@ -66,15 +36,40 @@ class _OpenTodoItemsTabViewState extends State<OpenTodoItemsTabView> {
       ],
     );
   }
+}
 
-  void _undoLastRemoved() {
-    // TODO: implement undoing last removed item.
+class _AddTodoTextField extends StatefulWidget {
+  const _AddTodoTextField();
+
+  @override
+  State<_AddTodoTextField> createState() => _AddTodoTextFieldState();
+}
+
+class _AddTodoTextFieldState extends State<_AddTodoTextField> {
+  final FocusNode _focusNode = FocusNode();
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
   }
 
-  void _removeTodoItem(TodoItem todo) {
-    // TODO: implement removing todo item.
-    setState(() {
-      _lastDeletedItem = todo;
-    });
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      focusNode: _focusNode,
+      controller: _controller,
+      decoration: const InputDecoration(
+        hintText: 'Enter a new todo item',
+        contentPadding: EdgeInsets.all(16),
+      ),
+      onSubmitted: (value) {
+        context.read<TodoCubit>().addTodoItem(title: value);
+        _controller.clear();
+        _focusNode.requestFocus();
+      },
+    );
   }
 }
