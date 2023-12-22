@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_state_management_demo/models/todo_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_state_management_demo/cubit/todo_cubit.dart';
 import 'package:flutter_state_management_demo/views/closed_todo_items_tab_view.dart';
 import 'package:flutter_state_management_demo/views/open_todo_items_tab_view.dart';
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  final List<TodoItem> _todoItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +21,14 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
-        body: TabBarView(
-          children: [
-            OpenTodoItemsTabView(_todoItems),
-            ClosedTodoItemsTabView(_todoItems),
-          ],
+        body: BlocProvider<TodoCubit>(
+          create: (context) => TodoCubit(),
+          child: const TabBarView(
+            children: [
+              OpenTodoItemsTabView(),
+              ClosedTodoItemsTabView(),
+            ],
+          ),
         ),
       ),
     );

@@ -1,32 +1,31 @@
 part of 'todo_cubit.dart';
 
-/// Base ToDo state.
-sealed class TodoState extends Equatable {
+class TodoState extends Equatable {
   const TodoState({
     this.todoItems = const [],
-    this.lastRemovedItem,
+    this.lastDeletedItem,
   });
 
   final List<TodoItem> todoItems;
-  final TodoItem? lastRemovedItem;
-}
+  final TodoItem? lastDeletedItem;
 
-/// The todo state when there are items.
-class PopulatedTodoState extends TodoState {
-  const PopulatedTodoState({
-    required super.todoItems,
-    super.lastRemovedItem,
-  });
+  List<TodoItem> get openTodoItems =>
+      todoItems.where((todo) => !todo.isDone).toList();
+  List<TodoItem> get closedTodoItems =>
+      todoItems.where((todo) => todo.isDone).toList();
 
   @override
-  List<Object?> get props => [todoItems, lastRemovedItem];
-}
+  List<Object> get props => [
+        // ...
+      ];
 
-/// The todo state when there are no items.
-class EmptyTodoState extends TodoState {
-  const EmptyTodoState({super.lastRemovedItem}) : super(todoItems: const []);
-
-  @override
-  // TODO: implement props
-  List<Object?> get props => [lastRemovedItem];
+  TodoState copyWith({
+    List<TodoItem>? todoItems,
+    TodoItem? lastDeletedItem,
+  }) {
+    return TodoState(
+      todoItems: todoItems ?? this.todoItems,
+      lastDeletedItem: lastDeletedItem ?? this.lastDeletedItem,
+    );
+  }
 }
