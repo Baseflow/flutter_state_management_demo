@@ -5,14 +5,12 @@ class TodoItemListTile extends StatelessWidget {
   const TodoItemListTile(
     this.todoItem, {
     required this.onRemove,
-    required this.onUndo,
     required this.onChanged,
     super.key,
   });
 
   final TodoItem todoItem;
   final VoidCallback onRemove;
-  final VoidCallback onUndo;
   final VoidCallback onChanged;
 
   @override
@@ -26,18 +24,7 @@ class TodoItemListTile extends StatelessWidget {
       ),
       title: Text(todoItem.title),
       trailing: IconButton(
-        onPressed: () {
-          onRemove.call();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Deleted \'$todoItem\''),
-              action: SnackBarAction(
-                label: 'Undo',
-                onPressed: onUndo,
-              ),
-            ),
-          );
-        },
+        onPressed: onRemove,
         icon: const Icon(Icons.delete),
       ),
     );

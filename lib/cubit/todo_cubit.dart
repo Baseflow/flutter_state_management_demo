@@ -12,19 +12,39 @@ class TodoCubit extends Cubit<TodoState> {
       ...state.todoItems,
       TodoItem(title: title),
     ];
-    final newState = state.copyWith(todoItems: updatedTodoItems);
-    emit(newState);
+
+    emit(state.copyWith(todoItems: updatedTodoItems));
   }
 
   void removeTodoItem(TodoItem todoItem) {
-    // TODO: implement removing todo item.
+    final updatedTodoItems = List<TodoItem>.from(state.todoItems)
+      ..remove(todoItem);
+
+    emit(state.copyWith(
+      todoItems: updatedTodoItems,
+      lastDeletedItem: todoItem,
+    ));
   }
 
   void undoLastRemoved() {
-    // TODO: Implement undoing last removed item.
+    final updatedTodoItems = [
+      ...state.todoItems,
+      state.lastDeletedItem!,
+    ];
+
+    emit(TodoState(
+      todoItems: updatedTodoItems,
+    ));
   }
 
   void toggleTodoItem(TodoItem todo) {
-    // TODO: implement toggling todo item.
+    final updatedTodoItems = state.todoItems.map((item) {
+      if (item == todo) {
+        return item.copyWith(isDone: !item.isDone);
+      }
+      return item;
+    }).toList();
+
+    emit(state.copyWith(todoItems: updatedTodoItems));
   }
 }

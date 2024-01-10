@@ -18,7 +18,6 @@ class ClosedTodoItemsTabView extends StatelessWidget {
             final todo = closedItems[index];
             return TodoItemListTile(
               todo,
-              onUndo: context.read<TodoCubit>().undoLastRemoved,
               onRemove: () {
                 context.read<TodoCubit>().removeTodoItem(todo);
               },

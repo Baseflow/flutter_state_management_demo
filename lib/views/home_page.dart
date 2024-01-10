@@ -11,24 +11,57 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Open'),
-              Tab(text: 'Done'),
-            ],
-          ),
+      child: BlocProvider(
+        create: (context) => TodoCubit(),
+        child: BlocBuilder<TodoCubit, TodoState>(
+          builder: (context, state) {
+            return Scaffold(
+              appBar: AppBar(
+                title: const Text('Home'),
+                bottom: TabBar(
+                  tabs: [
+                    Tab(text: 'Open (${state.openTodoItems.length})'),
+                    Tab(text: 'Done (${state.closedTodoItems.length})'),
+                  ],
+                ),
+              ),
+              body: const _TodoTabBarView(),
+            );
+          },
         ),
-        body: BlocProvider<TodoCubit>(
-          create: (context) => TodoCubit(),
-          child: const TabBarView(
-            children: [
-              OpenTodoItemsTabView(),
-              ClosedTodoItemsTabView(),
-            ],
-          ),
+      ),
+    );
+  }
+}
+
+class _TodoTabBarView extends StatelessWidget {
+  const _TodoTabBarView();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<TodoCubit, TodoState>(
+      listenWhen: (previous, current) {
+        return previous.todoItems.length > current.todoItems.length;
+      },
+      listener: (context, state) {
+        _showSnackBar(context);
+      },
+      child: const TabBarView(
+        children: [
+          OpenTodoItemsTabView(),
+          ClosedTodoItemsTabView(),
+        ],
+      ),
+    );
+  }
+
+  void _showSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Deleted todo item'),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: context.read<TodoCubit>().undoLastRemoved,
         ),
       ),
     );

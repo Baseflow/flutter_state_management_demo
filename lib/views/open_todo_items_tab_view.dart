@@ -23,7 +23,6 @@ class OpenTodoItemsTabView extends StatelessWidget {
                     onRemove: () {
                       context.read<TodoCubit>().removeTodoItem(todo);
                     },
-                    onUndo: context.read<TodoCubit>().undoLastRemoved,
                     onChanged: () {
                       context.read<TodoCubit>().toggleTodoItem(todo);
                     },

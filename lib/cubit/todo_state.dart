@@ -15,8 +15,9 @@ class TodoState extends Equatable {
       todoItems.where((todo) => todo.isDone).toList();
 
   @override
-  List<Object> get props => [
-        // ...
+  List<Object?> get props => [
+        todoItems,
+        lastDeletedItem,
       ];
 
   TodoState copyWith({
