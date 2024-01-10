@@ -27,6 +27,8 @@ class TodoCubit extends Cubit<TodoState> {
   }
 
   void undoLastRemoved() {
+    if (state.lastDeletedItem == null) return;
+
     final updatedTodoItems = [
       ...state.todoItems,
       state.lastDeletedItem!,

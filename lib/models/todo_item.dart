@@ -1,5 +1,7 @@
-class TodoItem {
-  TodoItem({
+import 'package:equatable/equatable.dart';
+
+class TodoItem extends Equatable {
+  const TodoItem({
     required this.title,
     this.isDone = false,
   });
@@ -16,4 +18,7 @@ class TodoItem {
       isDone: isDone ?? this.isDone,
     );
   }
+
+  @override
+  List<Object?> get props => [title, isDone];
 }
