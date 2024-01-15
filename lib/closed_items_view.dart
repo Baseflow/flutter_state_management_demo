@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_state_management_demo/cubit/todo_cubit.dart';
-import 'package:flutter_state_management_demo/to_do_item.dart';
+import 'package:flutter_state_management_demo/models/todo_item.dart';
 
 class ClosedItemsView extends StatelessWidget {
   const ClosedItemsView({super.key});
@@ -21,13 +21,13 @@ class ClosedItemsView extends StatelessWidget {
               leading: Checkbox(
                 value: todo.isDone,
                 onChanged: (value) {
-                  context.read<TodoCubit>().toggleItem(todo);
+                  context.read<TodoCubit>().toggleTodoItem(todo);
                 },
               ),
               trailing: IconButton(
                 icon: const Icon(Icons.delete),
                 onPressed: () {
-                  context.read<TodoCubit>().removeItem(todo);
+                  context.read<TodoCubit>().removeTodoItem(todo);
                 },
               ),
             );

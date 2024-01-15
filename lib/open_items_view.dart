@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_state_management_demo/cubit/todo_cubit.dart';
-import 'package:flutter_state_management_demo/to_do_item.dart';
+import 'package:flutter_state_management_demo/models/todo_item.dart';
 
 class OpenItemsView extends StatefulWidget {
   const OpenItemsView({super.key});
 
   @override
-  _OpenItemsViewState createState() => _OpenItemsViewState();
+  State<OpenItemsView> createState() => _OpenItemsViewState();
 }
 
 class _OpenItemsViewState extends State<OpenItemsView> {
@@ -37,7 +37,7 @@ class _OpenItemsViewState extends State<OpenItemsView> {
             hintText: 'Enter a todo item',
           ),
           onSubmitted: (value) {
-            context.read<TodoCubit>().addItem(value);
+            context.read<TodoCubit>().addTodoItem(title: value);
             _textEditingController.clear();
             _focusNode.requestFocus();
           },
@@ -45,16 +45,12 @@ class _OpenItemsViewState extends State<OpenItemsView> {
         Expanded(
           child: BlocBuilder<TodoCubit, TodoState>(
             builder: (context, state) {
-              return switch (state) {
-                PopulatedTodoState _ => _TodoItemsView(
-                    openItems: state.todoItems
-                        .where((element) => !element.isDone)
-                        .toList(),
-                  ),
-                _ => const Center(
-                    child: Text('No items yet, please add some.'),
-                  ),
-              };
+              if (state.todoItems.isEmpty) {
+                return const Center(
+                  child: Text('No items yet, please add some.'),
+                );
+              }
+              return _TodoItemsView(openItems: state.openTodoItems);
             },
           ),
         ),
@@ -81,13 +77,13 @@ class _TodoItemsView extends StatelessWidget {
           leading: Checkbox(
             value: todo.isDone,
             onChanged: (_) {
-              context.read<TodoCubit>().toggleItem(todo);
+              context.read<TodoCubit>().toggleTodoItem(todo);
             },
           ),
           trailing: IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () {
-              context.read<TodoCubit>().removeItem(todo);
+              context.read<TodoCubit>().toggleTodoItem(todo);
             },
           ),
         );
